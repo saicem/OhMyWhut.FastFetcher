@@ -1,9 +1,9 @@
 from requests.sessions import Session
-from cwsf_ele import Cwsf
 import requests
-import zhlgd
 import json
 import time
+from lib.cwsf_ele import Cwsf
+from lib import zhlgd
 
 # TODO 在这里设置用户名和密码
 username = ""

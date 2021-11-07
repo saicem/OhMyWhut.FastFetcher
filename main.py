@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from requests.sessions import Session
-from cwsf_ele import Cwsf
 import uvicorn
 import requests
-import zhlgd
 import json
+from model.apires import BadRes, GoodRes
+from lib.cwsf_ele import Cwsf
+from lib import zhlgd
 
 app = FastAPI()
 
@@ -27,12 +28,14 @@ def login2cwsf(cur_session: Session, username: str, password: str) -> bool:
     return text != None
 
 
-@app.post("/ele/fee")
+@app.post("/cwsf/ele/fee")
 def ele_fee(form: EleFeeForm):
     cur_session = requests.session()
     if not login2cwsf(cur_session, form.username, form.password):
-        return "查询失败"
-    return json.loads(Cwsf(cur_session=cur_session).queryReserve(form.meter_id))
+        return BadRes("查询失败")
+    return GoodRes(
+        "查询成功", json.loads(Cwsf(cur_session=cur_session).queryReserve(form.meter_id))
+    )
 
 
 if __name__ == "__main__":
