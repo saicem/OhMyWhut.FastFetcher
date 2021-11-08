@@ -1,12 +1,19 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
-
-WORKDIR /app
+FROM python:3.9.7-alpine3.14 as Base
 
 EXPOSE 8000
 
-COPY . .
+WORKDIR /app
+
+# 使用清华镜像源
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+  apk add nodejs
+
+COPY requirements.txt requirements.txt
 
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip install -r requirements.txt
+  pip install --upgrade pip && \
+  pip install --no-cache-dir --upgrade -r requirements.txt
+
+COPY . .
 
 CMD [ "uvicorn" ,"main:app","--host", "0.0.0.0"]
