@@ -33,7 +33,7 @@ class EleFeeFormMa(BaseModel):
 def ele_ma(form: EleFeeFormMa):
     cur_session = requests.session()
     if not login2cwsf(cur_session, form.username, form.password):
-        return BadRes("查询失败")
+        return BadRes("登录失败,检查账密是否正确！")
     res_json = json.loads(Cwsf(cur_session=cur_session).queryReserve(form.meter_id))
     # 剩余电量
     remain_power: str = (
@@ -61,7 +61,7 @@ class EleFeeFormYu(BaseModel):
 def ele_yu(form: EleFeeFormYu):
     cur_session = requests.session()
     if not login2cwsf(cur_session, form.username, form.password):
-        return BadRes("查询失败")
+        return BadRes("登录失败,检查账密是否正确！")
     res_json: dict[str, str] = json.loads(
         Cwsf(cur_session=cur_session).querySydl(form.roomno)
     )
