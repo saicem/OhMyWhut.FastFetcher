@@ -1,4 +1,5 @@
-test.py
 *.pyc
-.vscode
 *.csv
+test.py
+.vscode
+backup

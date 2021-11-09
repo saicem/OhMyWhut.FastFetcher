@@ -34,7 +34,9 @@ def ele_ma(form: EleFeeFormMa):
     cur_session = requests.session()
     if not login2cwsf(cur_session, form.username, form.password):
         return BadRes("登录失败,检查账密是否正确！")
-    res_json = json.loads(Cwsf(cur_session=cur_session).queryReserve(form.meter_id))
+    res_json: dict[str] = json.loads(
+        Cwsf(cur_session=cur_session).queryReserve(form.meter_id)
+    )
     # 剩余电量
     remain_power: str = (
         "{}{}".format(res_json["remainPower"], res_json["remainName"])
@@ -44,9 +46,7 @@ def ele_ma(form: EleFeeFormMa):
         else "无数据"
     )
     # 剩余电费
-    remain_due: str = (
-        res_json["meterOverdue"] if res_json.__contains__("meterOverdue") else "无数据"
-    )
+    remain_due = res_json.get("meterOverdue", "无数据")
     return GoodRes("查询成功", "剩余电量: {}\n剩余电费: {}".format(remain_power, remain_due))
 
 
@@ -67,18 +67,14 @@ def ele_yu(form: EleFeeFormYu):
     )
     if not res_json.__contains__("roomlist"):
         return BadRes("查询失败")
-    room_list = res_json["roomlist"]
+    room_list: dict[str] = res_json["roomlist"]
     remain_power = (
         "剩余{}: {}".format(room_list["remainName"], room_list["remainPower"])
         if room_list.__contains__("remainName")
         and room_list.__contains__("remainPower")
         else "无数据"
     )
-    read_time = (
-        "查表时间: {}".format(room_list["readTime"])
-        if room_list.__contains__("readTime")
-        else "无数据"
-    )
+    read_time = "查表时间: {}".format(room_list.get("readTime", "无数据"))
     return GoodRes("获取成功", "{}\n{}".format(remain_power, read_time))
 
 
