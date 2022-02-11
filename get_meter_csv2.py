@@ -20,8 +20,8 @@ def login2cwsf() -> Cwsf:
         print("请先填写学号密码")
         exit()
     cur_session = requests.session()
-    jsessionid, lt = zhlgd.cas_login(cur_session)
-    text = zhlgd.post_cas_login(username, password, jsessionid, lt, cur_session)
+    jsessionid, lt = zhlgd.cwsfCasLogin(cur_session)
+    text = zhlgd.loginCwsf(username, password, jsessionid, lt, cur_session)
     if text == None:
         print("登录失败")
         exit()

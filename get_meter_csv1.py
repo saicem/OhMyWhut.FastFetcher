@@ -22,8 +22,8 @@ def login2cwsf(cur_session: Session, username: str, password: str) -> Cwsf:
         print("请先填写学号密码")
         exit()
     cur_session = requests.session()
-    jsessionid, lt = zhlgd.cas_login(cur_session)
-    text = zhlgd.post_cas_login(username, password, jsessionid, lt, cur_session)
+    jsessionid, lt = zhlgd.cwsfCasLogin(cur_session)
+    text = zhlgd.loginCwsf(username, password, jsessionid, lt, cur_session)
     if text == None:
         print("登录失败")
         exit()
@@ -31,12 +31,12 @@ def login2cwsf(cur_session: Session, username: str, password: str) -> Cwsf:
     return cwsf
 
 
-def get_area_list(cwsf: Cwsf) -> list[str]:
+def getAreaList(cwsf: Cwsf) -> list[str]:
     res_json = json.loads(cwsf.getAreaInfo())["areaList"]
     return res_json
 
 
-def get_build_list(cwsf: Cwsf, area: str) -> list[str]:
+def getBuildList(cwsf: Cwsf, area: str) -> list[str]:
     if area == None:
         return None
     area_id = area.split("@")[0]
@@ -47,7 +47,7 @@ def get_build_list(cwsf: Cwsf, area: str) -> list[str]:
     return res_json["buildList"]
 
 
-def get_floor_list(cwsf: Cwsf, area: str, build: str) -> list[str]:
+def getFloorList(cwsf: Cwsf, area: str, build: str) -> list[str]:
     if area == None or build == None:
         return None
     area_id = area.split("@")[0]
@@ -59,7 +59,7 @@ def get_floor_list(cwsf: Cwsf, area: str, build: str) -> list[str]:
     return res_json["floorList"]
 
 
-def get_room_list(cwsf: Cwsf, build: str, floor_id: str):
+def getRoomList(cwsf: Cwsf, build: str, floor_id: str):
     if build == None or floor_id == None:
         return None
     build_id = build.split("@")[0]
@@ -71,15 +71,15 @@ def get_room_list(cwsf: Cwsf, build: str, floor_id: str):
 
 
 # 获取寝室列表 使用 json 会转为 unicode 编码
-def make_room_csv(cwsf):
+def makeRoomCsv(cwsf):
     index = 0
-    area_list = get_area_list(cwsf)
+    area_list = getAreaList(cwsf)
     for area in area_list:
-        build_list = get_build_list(cwsf, area)
+        build_list = getBuildList(cwsf, area)
         for build in build_list:
-            floor_list = get_floor_list(cwsf, area, build)
+            floor_list = getFloorList(cwsf, area, build)
             for floor_id in floor_list:
-                room_list = get_room_list(cwsf, build, floor_id)
+                room_list = getRoomList(cwsf, build, floor_id)
                 for room in room_list:
                     index += 1
                     str_form = "{},{},{},{}\n".format(index, area, build, room)
@@ -89,7 +89,7 @@ def make_room_csv(cwsf):
 
 
 # 将数据写入 meter.csv
-def write_meter(room_name: str, meter_id: str):
+def writeMeter(room_name: str, meter_id: str):
     if meter_id != None:
         open("meter.csv", "a", encoding="utf8").write(
             "{},{}\n".format(room_name, meter_id)
@@ -101,14 +101,14 @@ def write_meter(room_name: str, meter_id: str):
 
 
 # 生成 room.csv 以便下一步处理
-def make_room_csv_core():
+def makeRoomCsvCore():
     cwsf = login2cwsf()
     # 获取所有寝室
-    make_room_csv(cwsf)
+    makeRoomCsv(cwsf)
 
 
 # 读取 room.csv 生成 meter.csv
-def make_meter_csv_core():
+def makeMeterCsvCore():
     cwsf = login2cwsf()
     rooms = open("room.csv", "r", encoding="utf8")
     for line in rooms:
@@ -120,10 +120,10 @@ def make_meter_csv_core():
             meter_id = res_json["meterId"]
         else:
             meter_id = None
-        write_meter(room_name, meter_id)
+        writeMeter(room_name, meter_id)
 
 
 # 需要注意 运行耗时巨长
 if __name__ == "__main__":
-    make_room_csv_core()
-    make_meter_csv_core()
+    makeRoomCsvCore()
+    makeMeterCsvCore()

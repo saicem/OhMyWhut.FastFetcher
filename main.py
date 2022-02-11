@@ -11,14 +11,15 @@ from lib import zhlgd
 app = FastAPI()
 
 
+@app.get("/ping")
 @app.get("/")
 def ping():
     return "pong"
 
 
-def login2cwsf(cur_session: Session, username: str, password: str) -> bool:
-    jsessionid, lt = zhlgd.cas_login(cur_session)
-    text = zhlgd.post_cas_login(username, password, jsessionid, lt, cur_session)
+def login2cwsf(curSession: Session, username: str, password: str) -> bool:
+    jsessionid, lt = zhlgd.cwsfCasLogin(curSession)
+    text = zhlgd.loginCwsf(username, password, jsessionid, lt, curSession)
     return text != None
 
 
@@ -76,6 +77,19 @@ def ele_yu(form: EleFeeFormYu):
     )
     read_time = "查表时间: {}".format(room_list.get("readTime", "无数据"))
     return GoodRes("获取成功", "{}\n{}".format(remain_power, read_time))
+
+
+class ZhlgdForm(BaseModel):
+    username: str
+    password: str
+
+
+@app.post("/zhlgd/lib/record")
+def libRecord(form: ZhlgdForm):
+    curSession = requests.session()
+    zhlgd.login(form.username, form.password, curSession)
+    res = zhlgd.getLibRecordList(curSession)
+    return GoodRes("获取成功", res)
 
 
 if __name__ == "__main__":
