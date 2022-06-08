@@ -11,7 +11,7 @@ from lib import zhlgd
 app = FastAPI()
 
 
-@app.get("/ping")
+@app.get("/ping", status_code=200)
 @app.get("/")
 def ping():
     return "pong"
