@@ -10,7 +10,7 @@ import requests
 import json
 import time
 from lib.cwsf_ele import Cwsf
-from lib import zhlgd
+from lib import ias
 
 # TODO 在这里设置用户名和密码
 username = ""

@@ -9,8 +9,8 @@ courseCsv = "course.csv"
 roomCsv = "room.csv"
 
 
-def ParseClassRoom(教室: str):
-    res = re.search(r"(.+?)\((.+?)\)-(\d+)", 教室)
+def ParseClassRoom(room: str):
+    res = re.search(r"(.+?)\((.+?)\)-(\d+)", room)
     if res is None:
         # return "", "", ""
         return None
@@ -149,6 +149,6 @@ def WriteRoomCsv(courses: list[Course]):
 if __name__ == "__main__":
     html = open(htmlName, "r", encoding="utf-8").read()
     html = html.replace("\n", "")
-    html = re.sub("\s+", " ", html)
+    html = re.sub("\\s+", " ", html)
     courses = WriteCourseCsv(html)
     WriteRoomCsv(courses)

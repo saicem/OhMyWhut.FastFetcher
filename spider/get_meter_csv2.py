@@ -8,7 +8,7 @@
 import requests
 import json
 from lib.cwsf_ele import Cwsf
-from lib import zhlgd
+from lib import ias
 
 # TODO 在这里设置用户名和密码
 username = ""
