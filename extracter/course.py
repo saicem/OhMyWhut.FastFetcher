@@ -6,7 +6,7 @@ from regex import Match
 # 源html文件 用于解析出课程及教室
 htmlName = "20212.html"
 courseCsv = "course.csv"
-roomCsv = "room.csv"
+roomCsv = "room_221010.csv"
 
 
 def ParseClassRoom(room: str):
