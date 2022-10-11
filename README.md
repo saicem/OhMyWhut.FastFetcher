@@ -12,6 +12,10 @@ main.py 用于 fastapi 部署
 - 图书查询
 - 课表(JSON,ical,png)
 
+样例
+
+<img src="docs/course.png" width="40%">
+
 接口参考,运行 [main.py](main.py) 后查看 http://127.0.0.1:8000/docs
 
 ## 部署
