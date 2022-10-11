@@ -1,13 +1,15 @@
 import io
 
 from fastapi import FastAPI, Response
-from fastapi.responses import StreamingResponse
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
 import uvicorn
 
 from config import *
 
 from lib.course.course import parse_courses_from_main_page
+from lib.course.ical_maker import IcalWriter
 from lib.course.picgen import CourseDrawer
 from lib.ias import Ias
 
@@ -87,6 +89,29 @@ def course_png(form: CoursePngForm):
     png.save(buf, format='png')
     buf.seek(0)
     return StreamingResponse(content=buf, media_type="image/png")
+
+
+@app.post("/course/json")
+def course_json(form: LoginForm):
+    ias = Ias(form.username, form.password)
+    if not ias.login():
+        return Response(content="登录失败,检查账密是否正确！", status_code=401)
+    res = ias.fetch_jwc_main_page()
+    courses = parse_courses_from_main_page(res.text)
+    return JSONResponse(content=jsonable_encoder({"data": courses}))
+
+
+@app.post("/course/ical")
+def course_ical(form: LoginForm):
+    ias = Ias(form.username, form.password)
+    if not ias.login():
+        return Response(content="登录失败,检查账密是否正确！", status_code=401)
+    res = ias.fetch_jwc_main_page()
+    courses = parse_courses_from_main_page(res.text)
+    cal = IcalWriter(TERM_START_DAY, courses).make_ical_from_course()
+    cal.seek(0)
+    return StreamingResponse(content=cal, media_type="text/calendar",
+                             headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
 
 
 if __name__ == "__main__":
