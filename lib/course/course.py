@@ -33,7 +33,6 @@ class Course:
 
 
 def parse_courses_from_main_page(html: str) -> list[Course]:
-    # html = re.sub('\\s', '', html)
     root = etree.HTML(html)
     courses: list[Course] = []
     # 5*7个 5为5个大节 7为7天

@@ -6,6 +6,18 @@
 
 main.py 用于 fastapi 部署
 
+功能如下
+
+- 电费查询
+- 图书查询
+- 课表(JSON,ical,png)
+
+接口参考,运行 [main.py](main.py) 后查看 http://127.0.0.1:8000/docs
+
+## 部署
+
+Dockerfile 直接用就好，[config.py](config.py) 需要更改一下，字体呀，开学日期呀。
+
 ## 爬虫
 
 先执行 [get_room_csv.py](spider/get_room_csv.py)，
