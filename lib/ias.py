@@ -58,3 +58,18 @@ class Ias:
         }
         headers = {"Content-Type": "application/json"}
         return self.session.post(url=url, headers=headers, data=json.dumps(data))
+
+    def fetch_jwc_main_page(self) -> Response:
+        res = self.session.get(
+            "http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fsso.jwc.whut.edu.cn%2FCertification%2Findex2.jsp")
+        if not res.url.startswith("http://sso.jwc.whut.edu.cn/Certification/index2.jsp"):
+            raise Exception("登录教务处失败")
+
+        res = self.session.get("http://sso.jwc.whut.edu.cn/Certification/casindex.do", headers={"Referrer": res.url})
+        if not res.url.startswith("http://sso.jwc.whut.edu.cn/Certification/toIndex.do"):
+            raise Exception("登录教务处失败")
+
+        self.session.get("http://218.197.102.183/Course")
+        res = self.session.get("http://218.197.102.183/Course/grkbList.do")
+
+        return res

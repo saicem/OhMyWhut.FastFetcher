@@ -1,9 +1,15 @@
-from fastapi import FastAPI
+import io
+
+from fastapi import FastAPI, Response
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import uvicorn
 
+from config import *
+
+from lib.course.course import parse_courses_from_main_page
+from lib.course.picgen import CourseDrawer
 from lib.ias import Ias
-from model.apires import BadRes, GoodRes
 
 app = FastAPI()
 
@@ -14,11 +20,18 @@ def ping():
     return "pong"
 
 
-class ElectricForm(BaseModel):
+class LoginForm(BaseModel):
     username: str
     password: str
+
+
+class ElectricForm(LoginForm):
     meterId: str
     factoryCode: str
+
+
+class CoursePngForm(LoginForm):
+    week: int
 
 
 # 马区电费查询
@@ -26,10 +39,9 @@ class ElectricForm(BaseModel):
 def electric(form: ElectricForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
-        return BadRes("登录失败,检查账密是否正确！")
+        return Response(content="登录失败,检查账密是否正确！", status_code=401)
 
     res = ias.fetch_electric_fee(form.meterId, form.factoryCode)
-
     res_json = res.json()
 
     # 剩余电量
@@ -42,21 +54,39 @@ def electric(form: ElectricForm):
     )
     # 剩余电费
     remain_due = res_json.get("meterOverdue", "无数据")
-    return GoodRes("查询成功", "剩余电量: {}\n剩余电费: {}".format(remain_power, remain_due))
-
-
-class BooksForm(BaseModel):
-    username: str
-    password: str
+    return Response("剩余电量: {}\n剩余电费: {}".format(remain_power, remain_due))
 
 
 @app.post("/books")
-def books(form: BooksForm):
+def books(form: LoginForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
-        return BadRes("登录失败,检查账密是否正确！")
+        return Response(content="登录失败,检查账密是否正确！", status_code=401)
     res = ias.fetch_books()
-    return GoodRes("图书获取成功", res.json())
+    return Response(res.json())
+
+
+@app.post("/course/png")
+def course_png(form: CoursePngForm):
+    if not 1 <= form.week <= 20:
+        return Response(content="周次应该在 1~20", status_code=400)
+
+    ias = Ias(form.username, form.password)
+    if not ias.login():
+        return Response(content="登录失败,检查账密是否正确！", status_code=401)
+
+    res = ias.fetch_jwc_main_page()
+    courses = parse_courses_from_main_page(res.text)
+    png = CourseDrawer(
+        courses=[course for course in courses if course.StartWeek <= form.week <= course.EndWeek],
+        week_order=form.week,
+        term_start_day=TERM_START_DAY,
+        font=IMAGE_TTF
+    ).draw()
+    buf = io.BytesIO()
+    png.save(buf, format='png')
+    buf.seek(0)
+    return StreamingResponse(content=buf, media_type="image/png")
 
 
 if __name__ == "__main__":

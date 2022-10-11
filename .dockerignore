@@ -1,5 +1,4 @@
 *.pyc
 *.csv
-test.py
 .vscode
-backup
+__pycache__
