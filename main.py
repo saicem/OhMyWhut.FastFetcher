@@ -46,7 +46,6 @@ def electric(form: ElectricForm):
     res = ias.fetch_electric_fee(form.meterId, form.factoryCode)
     res_json = res.json()
 
-    # 剩余电量
     remain_power: str = (
         "{}{}".format(res_json["remainPower"], res_json["remainName"])
         if (
@@ -54,9 +53,9 @@ def electric(form: ElectricForm):
         )
         else "无数据"
     )
-    # 剩余电费
-    remain_due = res_json.get("meterOverdue", "无数据")
-    return Response("剩余电量: {}\n剩余电费: {}".format(remain_power, remain_due))
+    remain_fee = res_json.get("meterOverdue", "无数据")
+
+    return JSONResponse(content=jsonable_encoder({"remainPower": remain_power, "remainFee": remain_fee}))
 
 
 @app.post("/books")
@@ -65,7 +64,17 @@ def books(form: LoginForm):
     if not ias.login():
         return Response(content="登录失败,检查账密是否正确！", status_code=401)
     res = ias.fetch_books()
-    return Response(res.json())
+    raw_books = res.json()['list']
+
+    def filter_book(book: {}):
+        return {
+            "name": book['ZBT'],
+            "expire": book['DQRQ'],
+            "borrow": book['JYRQ'],
+        }
+
+    cooked_books = [filter_book(book) for book in raw_books]
+    return JSONResponse(content=jsonable_encoder({"books": cooked_books}))
 
 
 @app.post("/course/png")
