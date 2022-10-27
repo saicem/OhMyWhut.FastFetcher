@@ -1,10 +1,14 @@
 # OhMyWhut.FastFetcher
 
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
+![GitHub repo size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
+
+
 > Python 怎么会 fast 呢？ 因为写起来很 fast
 
-# web api
+# Web API
 
-main.py 用于 fastapi 部署
+[main.py](main.py) 用于 fastapi 部署
 
 功能如下
 
@@ -12,7 +16,101 @@ main.py 用于 fastapi 部署
 - 图书查询
 - 课表(JSON,ical,png)
 
-样例
+## 接口示例
+
+- username: 智慧理工大账号
+- password: 智慧理工大密码
+
+### 电费查询
+
+查询 body
+
+```json
+{
+  "username": "string",
+  "password": "string",
+  "meterId": "string",
+  "factoryCode": "string"
+}
+```
+
+- meterId: 查看 [meter_2210.csv](docs/meter_2210.csv)，或自行爬取，代码参考 [spider](spider) 文件夹
+- factoryCode: 固定为 "E035"
+
+返回样例
+
+```json
+{
+  "remainPower": "88.17度",
+  "remainFee": "51.14"
+}
+```
+
+### 图书查询
+
+查询 body
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+返回样例
+
+```json
+{
+  "books": [
+    {
+      "name": "现代操作系统",
+      "expire": "2023-09-24",
+      "borrow": "2022-09-13"
+    }
+  ]
+}
+```
+
+### 课表 json
+
+```json
+{
+  "data": [
+    {
+      "Name": "形势与政策",
+      "Room": "南湖-合一",
+      "Teacher": "神马",
+      "StartWeek": 5,
+      "EndWeek": 8,
+      "StartSection": 6,
+      "EndSection": 7,
+      "DayOfWeek": 4
+    }
+  ]
+}
+```
+
+### 课表日历
+
+```text
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:c505d5e6-03c9-4fa5-88ee-d0b1d23033b4
+BEGIN:VEVENT
+UID:74f9b8b6-65a2-4c73-a08a-ffe408aff08f
+SUMMARY:形势与政策
+LOCATION:东教-合一
+DESCRIPTION:神马
+DTSTART:20221110T060000Z
+DTEND:20221110T073500Z
+RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=4
+END:VEVENT
+END:VCALENDAR
+```
+
+或者<a href="docs/courses.ics" download>下载文件</a>试试
+
+### 课表图片
 
 <img src="docs/course.png" width="35%" alt="课表示例图片">
 
