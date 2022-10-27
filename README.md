@@ -41,8 +41,10 @@
 
 ```json
 {
-  "remainPower": "88.17度",
-  "remainFee": "51.14"
+  "data": {
+    "remainPower": "88.17度",
+    "remainFee": "51.14"
+  }
 }
 ```
 
@@ -61,13 +63,15 @@
 
 ```json
 {
-  "books": [
-    {
-      "name": "现代操作系统",
-      "expire": "2023-09-24",
-      "borrow": "2022-09-13"
-    }
-  ]
+  "data": {
+    "books": [
+      {
+        "name": "现代操作系统",
+        "expire": "2023-09-24",
+        "borrow": "2022-09-12"
+      }
+    ]
+  }
 }
 ```
 
@@ -75,18 +79,20 @@
 
 ```json
 {
-  "data": [
-    {
-      "Name": "形势与政策",
-      "Room": "南湖-合一",
-      "Teacher": "神马",
-      "StartWeek": 5,
-      "EndWeek": 8,
-      "StartSection": 6,
-      "EndSection": 7,
-      "DayOfWeek": 4
-    }
-  ]
+  "data": {
+    "courses": [
+      {
+        "Name": "形势与政策",
+        "Room": "东教-合一",
+        "Teacher": "南北",
+        "StartWeek": 5,
+        "EndWeek": 8,
+        "StartSection": 6,
+        "EndSection": 7,
+        "DayOfWeek": 4
+      }
+    ]
+  }
 }
 ```
 
@@ -108,13 +114,25 @@ END:VEVENT
 END:VCALENDAR
 ```
 
-或者<a href="docs/courses.ics" download>下载文件</a>试试
+或者[下载文件](docs/courses.ics)试试
+
+> 因为 markdown 不能直接提供下载链接，所以得自己手动下载一下。
 
 ### 课表图片
 
 <img src="docs/course.png" width="35%" alt="课表示例图片">
 
 接口参考,运行 [main.py](main.py) 后查看 http://127.0.0.1:8000/docs
+
+### 校园卡余额
+
+```json
+{
+  "data": {
+    "cardMoney": "8.93元"
+  }
+}
+```
 
 ## 部署
 

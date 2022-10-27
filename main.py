@@ -55,7 +55,14 @@ def electric(form: ElectricForm):
     )
     remain_fee = res_json.get("meterOverdue", "无数据")
 
-    return JSONResponse(content=jsonable_encoder({"remainPower": remain_power, "remainFee": remain_fee}))
+    return JSONResponse(content=jsonable_encoder(
+        {
+            "data": {
+                "remainPower": remain_power,
+                "remainFee": remain_fee
+            }
+        }
+    ))
 
 
 @app.post("/books")
@@ -74,7 +81,7 @@ def books(form: LoginForm):
         }
 
     cooked_books = [filter_book(book) for book in raw_books]
-    return JSONResponse(content=jsonable_encoder({"books": cooked_books}))
+    return JSONResponse(content=jsonable_encoder({"data": {"books": cooked_books}}))
 
 
 @app.post("/course/png")
@@ -107,7 +114,7 @@ def course_json(form: LoginForm):
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
     res = ias.fetch_jwc_main_page()
     courses = parse_courses_from_main_page(res.text)
-    return JSONResponse(content=jsonable_encoder({"data": courses}))
+    return JSONResponse(content=jsonable_encoder({"data": {"courses": courses}}))
 
 
 @app.post("/course/ical")
@@ -121,6 +128,16 @@ def course_ical(form: LoginForm):
     cal.seek(0)
     return StreamingResponse(content=cal, media_type="text/calendar",
                              headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
+
+
+@app.post("/card/money")
+def get_card_money(form: LoginForm):
+    ias = Ias(form.username, form.password)
+    if not ias.login():
+        return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
+    res = ias.fetch_card_money()
+    money = int(res.json()['KHYE'])
+    return JSONResponse(content=jsonable_encoder({"data": {"cardMoney": f"{money // 100}.{money % 100}元"}}))
 
 
 if __name__ == "__main__":

@@ -73,3 +73,11 @@ class Ias:
         res = self.session.get("http://218.197.102.183/Course/grkbList.do")
 
         return res
+
+    def fetch_card_money(self) -> Response:
+        """
+        获取校园卡余额，单位（分）
+        """
+        return self.session.post(url="http://zhlgd.whut.edu.cn/tp_up/up/sysintegration/getCardMoney",
+                                 headers={"Content-Type": "application/json"},
+                                 data="{}")
