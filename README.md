@@ -5,7 +5,7 @@
 ![size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
 ![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
 ![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
-
+[![Docker Image CI](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml/badge.svg)](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml)
 > Python 怎么会 fast 呢？ 因为写起来很 fast
 
 # Web API
