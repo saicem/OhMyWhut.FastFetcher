@@ -1,8 +1,10 @@
 # OhMyWhut.FastFetcher
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
-![GitHub repo size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
-
+![lines](https://img.shields.io/tokei/lines/github/saicem/OhMyWhut.FastFetcher)
+![size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
+![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
+![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
 
 > Python 怎么会 fast 呢？ 因为写起来很 fast
 
@@ -10,13 +12,9 @@
 
 [main.py](main.py) 用于 fastapi 部署
 
-功能如下
-
-- 电费查询
-- 图书查询
-- 课表(JSON,ical,png)
-
 ## 接口示例
+
+可运行 [main.py](main.py) 后访问 http://127.0.0.1:8000/docs 查看 swagger UI
 
 - username: 智慧理工大账号
 - password: 智慧理工大密码
@@ -75,7 +73,7 @@
 }
 ```
 
-### 课表 json
+### 课表 JSON
 
 ```json
 {
@@ -121,8 +119,6 @@ END:VCALENDAR
 ### 课表图片
 
 <img src="docs/course.png" width="35%" alt="课表示例图片">
-
-接口参考,运行 [main.py](main.py) 后查看 http://127.0.0.1:8000/docs
 
 ### 校园卡余额
 
