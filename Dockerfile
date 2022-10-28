@@ -6,7 +6,7 @@ WORKDIR /app
 
 ARG APK_REGISTRY
 
-RUN if [[ -n "${APK_REGISTRY}" ]] sed -i "s/${APK_REGISTRY}/g" /etc/apk/repositories && \
+RUN if [[ -n "${APK_REGISTRY}" ]]; then sed -i "s/${APK_REGISTRY}/g" /etc/apk/repositories; fi && \
     apk add nodejs
 
 COPY requirements.txt requirements.txt
