@@ -16,12 +16,6 @@ from lib.ias import Ias
 app = FastAPI()
 
 
-@app.get("/ping", status_code=200)
-@app.get("/")
-def ping():
-    return "pong"
-
-
 class LoginForm(BaseModel):
     username: str
     password: str
@@ -38,7 +32,7 @@ class CoursePngForm(LoginForm):
 
 # 马区电费查询
 @app.post("/electric")
-def electric(form: ElectricForm):
+async def electric(form: ElectricForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
@@ -66,7 +60,7 @@ def electric(form: ElectricForm):
 
 
 @app.post("/books")
-def books(form: LoginForm):
+async def books(form: LoginForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
@@ -85,7 +79,7 @@ def books(form: LoginForm):
 
 
 @app.post("/course/png")
-def course_png(form: CoursePngForm):
+async def course_png(form: CoursePngForm):
     if not 1 <= form.week <= 20:
         return PlainTextResponse(content="周次应该在 1~20", status_code=400)
 
@@ -108,7 +102,7 @@ def course_png(form: CoursePngForm):
 
 
 @app.post("/course/json")
-def course_json(form: LoginForm):
+async def course_json(form: LoginForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
@@ -118,7 +112,7 @@ def course_json(form: LoginForm):
 
 
 @app.post("/course/ical")
-def course_ical(form: LoginForm):
+async def course_ical(form: LoginForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
@@ -131,7 +125,7 @@ def course_ical(form: LoginForm):
 
 
 @app.post("/card/money")
-def get_card_money(form: LoginForm):
+async def get_card_money(form: LoginForm):
     ias = Ias(form.username, form.password)
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
