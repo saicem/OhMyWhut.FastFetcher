@@ -11,3 +11,6 @@ services:
 
     ports:
       - ${DeployPort}:8000
+    environment:
+      - TERM_START_DATE=${TERM_START_DATE}
+      - COURSE_TTF=${COURSE_TTF}

@@ -3,10 +3,12 @@
 ![lines](https://img.shields.io/tokei/lines/github/saicem/OhMyWhut.FastFetcher)
 ![size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/saicem/OhMyWhut.FastFetcher)
+![stars](https://img.shields.io/github/stars/saicem/OhMyWhut.FastFetcher?style=social)
 
 ![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
 ![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
 [![Docker Image CI](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml/badge.svg)](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml)
+
 > Python 怎么会 fast 呢？ 因为写起来很 fast
 
 ## 起步
@@ -29,9 +31,13 @@ docker pull saicem/fast-fetcher
 docker run -d -p 8000:8000 saicem/fast-fetcher 
 ```
 
-根据需要修改[config.py](config.py)的字体，开学日期等信息。
+根据需要修改[config.py](config.py)的字体，开学日期，可从环境变量读取。
 
 字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
+
+#### 环境变量
+- `TERM_START_DATE` 开学第一天，默认为 "2022-08-29"
+- `COURSE_TTF` 字体名称，默认为 "LXGWWenKaiMono-Regular.ttf"
 
 ## 电费爬虫
 
@@ -162,6 +168,3 @@ END:VCALENDAR
   }
 }
 ```
-
-![stars](https://img.shields.io/github/stars/saicem/OhMyWhut.FastFetcher?style=social)
-![forks](https://img.shields.io/github/forks/saicem/OhMyWhut.FastFetcher?style=social)
