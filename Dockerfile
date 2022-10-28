@@ -4,12 +4,16 @@ EXPOSE 8000
 
 WORKDIR /app
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+ARG APK_REGISTRY
+
+RUN if [[ -n "${APK_REGISTRY}" ]] sed -i "s/${APK_REGISTRY}/g" /etc/apk/repositories && \
     apk add nodejs
 
 COPY requirements.txt requirements.txt
 
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+ARG PIP_REGISTRY
+
+RUN if [[ -n "${PIP_REGISTRY}" ]]; then pip config set global.index-url ${PIP_REGISTRY}; fi && \
     pip install --upgrade pip && \
     pip install --no-cache-dir --upgrade -r requirements.txt
 

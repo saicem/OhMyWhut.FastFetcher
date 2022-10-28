@@ -5,5 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - PIP_REGISTRY=https://pypi.tuna.tsinghua.edu.cn/simple
+        - APK_REGISTRY=dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn
+
     ports:
       - ${DeployPort}:8000
