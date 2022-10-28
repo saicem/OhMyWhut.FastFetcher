@@ -1,18 +1,51 @@
 # OhMyWhut.FastFetcher
 
-[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 ![lines](https://img.shields.io/tokei/lines/github/saicem/OhMyWhut.FastFetcher)
 ![size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/saicem/OhMyWhut.FastFetcher)
+
 ![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
 ![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
 [![Docker Image CI](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml/badge.svg)](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml)
 > Python 怎么会 fast 呢？ 因为写起来很 fast
 
-# Web API
+## 起步
 
-[main.py](main.py) 用于 fastapi 部署
+### 前提条件
 
-## 接口示例
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
+
+```shell
+pip install -r requirements.txt
+```
+
+### 部署
+
+直接运行 [main.py](main.py)
+，或者使用已构建好的[镜像](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
+
+```shell
+docker pull saicem/fast-fetcher
+docker run -d -p 8000:8000 saicem/fast-fetcher 
+```
+
+根据需要修改[config.py](config.py)的字体，开学日期等信息。
+
+字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
+
+## 电费爬虫
+
+- 先执行 [get_room_csv.py](spider/get_room_csv.py)，得到 room.csv，
+- 再执行 [get_meter_csv.py](spider/get_meter_csv.py)，得到 meter.csv。
+
+> 可能因为登录状态丢失导致爬虫中途挂了，从断的地方继续就好。
+
+数据（可以直接拿来用）
+
+- [room_2210.csv](docs/room_2210.csv)
+- [meter_2210.csv](docs/meter_2210.csv)
+
+## Web API
 
 可运行 [main.py](main.py) 后访问 http://127.0.0.1:8000/docs 查看 swagger UI
 
@@ -130,32 +163,5 @@ END:VCALENDAR
 }
 ```
 
-## 部署
-
-[Dockerfile](Dockerfile) 直接用就好，[config.py](config.py) 需要更改一下，字体呀，开学日期呀。
-
-也可以用已经构建好的镜像
-https://hub.docker.com/repository/docker/saicem/fast-fetcher
-
-修改一下，本地的开放端口
-
-```shell
-docker pull saicem/fast-fetcher
-docker run -d -p 8000:8000 saicem/fast-fetcher 
-```
-
-字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
-
-## 爬虫
-
-先执行 [get_room_csv.py](spider/get_room_csv.py)，
-得到 room.csv，
-再执行 [get_meter_csv.py](spider/get_meter_csv.py)，
-得到 meter.csv。
-
-> 可能因为登录状态丢失导致爬虫中途挂了，从断的地方继续就好。
-
-数据（可以直接拿来用）
-
-- [room_2210.csv](docs/room_2210.csv)
-- [meter_2210.csv](docs/meter_2210.csv)
+![stars](https://img.shields.io/github/stars/saicem/OhMyWhut.FastFetcher?style=social)
+![forks](https://img.shields.io/github/forks/saicem/OhMyWhut.FastFetcher?style=social)
