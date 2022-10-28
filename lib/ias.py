@@ -5,6 +5,7 @@ import requests
 from lxml import etree
 from requests import Response
 
+import config
 from lib.js_reader import des3
 
 
@@ -13,6 +14,7 @@ class Ias:
         self.__username = username
         self.__password = password
         self.session = requests.session()
+        self.session.headers.setdefault("user-agent", config.USER_AGENT)
 
     def login(self) -> bool:
         res = self.session.get("http://zhlgd.whut.edu.cn/tpass/login")

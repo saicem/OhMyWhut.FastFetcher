@@ -36,8 +36,10 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
 
 #### 环境变量
+
 - `TERM_START_DATE` 开学第一天，默认为 "2022-08-29"
 - `COURSE_TTF` 字体名称，默认为 "LXGWWenKaiMono-Regular.ttf"
+- `USER_AGENT` 请求头，默认为 `None`
 
 ## 电费爬虫
 

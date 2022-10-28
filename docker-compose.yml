@@ -14,3 +14,4 @@ services:
     environment:
       - TERM_START_DATE=${TERM_START_DATE}
       - COURSE_TTF=${COURSE_TTF}
+      - USER_AGENT=${USER_AGENT}
