@@ -83,7 +83,7 @@ async def books(form: LoginForm):
 async def course_png(form: CoursePngForm):
     # 根据开学时间计算当前周
     if form.week == 0:
-        form.week = (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7
+        form.week = (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7 + 1
 
     if not 1 <= form.week <= 20:
         return PlainTextResponse(content="周次应该在 1~20", status_code=400)
