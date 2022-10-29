@@ -6,6 +6,7 @@ from fastapi.responses import StreamingResponse, JSONResponse, PlainTextResponse
 from pydantic import BaseModel
 import uvicorn
 
+import config
 from config import *
 
 from lib.course.course import parse_courses_from_main_page
@@ -27,7 +28,7 @@ class ElectricForm(LoginForm):
 
 
 class CoursePngForm(LoginForm):
-    week: int
+    week: int = 0
 
 
 # 马区电费查询
@@ -80,6 +81,10 @@ async def books(form: LoginForm):
 
 @app.post("/course/png")
 async def course_png(form: CoursePngForm):
+    # 根据开学时间计算当前周
+    if form.week == 0:
+        form.week = (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7
+
     if not 1 <= form.week <= 20:
         return PlainTextResponse(content="周次应该在 1~20", status_code=400)
 

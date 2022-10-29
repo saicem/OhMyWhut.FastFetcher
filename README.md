@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ### 部署
 
 直接运行 [main.py](main.py)
-，或者使用已构建好的[镜像](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
+，或者使用已构建好的 [Docker 镜像](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
 
 ```shell
 docker pull saicem/fast-fetcher
@@ -43,8 +43,7 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 
 ## 电费爬虫
 
-- 先执行 [get_room_csv.py](spider/get_room_csv.py)，得到 room.csv，
-- 再执行 [get_meter_csv.py](spider/get_meter_csv.py)，得到 meter.csv。
+- 查看 [get_meter_csv.py](spider/get_meter_csv.py)
 
 > 可能因为登录状态丢失导致爬虫中途挂了，从断的地方继续就好。
 
@@ -158,6 +157,20 @@ END:VCALENDAR
 > 因为 markdown 不能直接提供下载链接，所以得自己手动下载一下。
 
 ### 课表图片
+
+查询 body
+
+```json
+{
+  "username": "string",
+  "password": "string",
+  "week": 0
+}
+```
+
+week 为 0 或空缺则会根据当前时间和开学日期计算
+
+返回样例
 
 <img src="docs/course.png" width="35%" alt="课表示例图片">
 
