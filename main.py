@@ -1,20 +1,21 @@
 import io
 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse, JSONResponse, PlainTextResponse
 from pydantic import BaseModel
-import uvicorn
 
 import config
 from config import *
-
 from lib.course.course import parse_courses_from_main_page
 from lib.course.ical_maker import IcalWriter
 from lib.course.picgen import CourseDrawer
 from lib.ias import Ias
+from lib.middleware import ResponseHeaderMiddleware
 
 app = FastAPI()
+app.add_middleware(ResponseHeaderMiddleware, version='1.0.4')
 
 
 class LoginForm(BaseModel):
