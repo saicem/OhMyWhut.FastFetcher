@@ -80,8 +80,9 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 ```json
 {
   "data": {
-    "remainPower": "88.17度",
-    "remainFee": "51.14"
+    "remainPower": "81.35度",
+    "totalPower": "13294.17度",
+    "remainFee": "46.3元"
   }
 }
 ```

@@ -31,7 +31,6 @@ class CoursePngForm(LoginForm):
     week: int = 0
 
 
-# 马区电费查询
 @app.post("/electric")
 async def electric(form: ElectricForm):
     ias = Ias(form.username, form.password)
@@ -41,20 +40,24 @@ async def electric(form: ElectricForm):
     res = ias.fetch_electric_fee(form.meterId, form.factoryCode)
     res_json = res.json()
 
-    remain_power: str = (
+    remain_power = (
         "{}{}".format(res_json["remainPower"], res_json["remainName"])
-        if (
-                res_json.__contains__("remainPower") and res_json.__contains__("remainName")
-        )
+        if "remainPower" in res_json and "remainName" in res_json
         else "无数据"
     )
-    remain_fee = res_json.get("meterOverdue", "无数据")
+    remain_fee = res_json.get("meterOverdue", "无数据") + "元"
+    total_power = (
+        "{}{}".format(res_json["ZVlaue"], res_json["unit"])
+        if "ZVlaue" in res_json and "unit" in res_json
+        else "无数据"
+    )
 
     return JSONResponse(content=jsonable_encoder(
         {
             "data": {
                 "remainPower": remain_power,
-                "remainFee": remain_fee
+                "totalPower": total_power,
+                "remainFee": remain_fee,
             }
         }
     ))
