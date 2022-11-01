@@ -42,13 +42,17 @@ async def electric(form: ElectricForm):
     res_json = res.json()
 
     remain_power = (
-        "{}{}".format(res_json["remainPower"], res_json["remainName"])
+        f"{res_json['remainPower']}{res_json['remainName']}"
         if "remainPower" in res_json and "remainName" in res_json
         else "无数据"
     )
-    remain_fee = res_json.get("meterOverdue", "无数据") + "元"
+    remain_fee = (
+        f"{res_json['meterOverdue']}元"
+        if "meterOverdue" in res_json
+        else "无数据"
+    )
     total_power = (
-        "{}{}".format(res_json["ZVlaue"], res_json["unit"])
+        f"{res_json['ZVlaue']}{res_json['unit']}"
         if "ZVlaue" in res_json and "unit" in res_json
         else "无数据"
     )
