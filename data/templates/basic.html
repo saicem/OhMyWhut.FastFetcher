@@ -44,7 +44,6 @@
 
     .course {
         height: 100%;
-        border: 1px solid red;
         border-radius: 10px;
         margin: 0.2em;
         padding: 0.3em;
@@ -60,21 +59,45 @@
 </style>
 
 <script>
+    /**
+     * 检查课表是否属于满课，用于找出本来是三节的大课只有两节的情况
+     * @param {number} startSection
+     * @param {number} endSection
+     * @returns {boolean}
+     */
     function checkIsFull(startSection, endSection) {
         if (startSection === 1 || startSection === 9) {
             return true;
         }
-        if ([5, 10, 13].find(x => x === endSection)) {
-            return true
-        }
-        return false
+        return !![5, 10, 13].find(x => x === endSection);
     }
 
+    /**
+     * 获取日期
+     * @param {Date} termStartDate 开学日期
+     * @param {number} week
+     * @returns {string[]}
+     */
+    function getDates(termStartDate, week) {
+        termStartDate.setDate(termStartDate.getDate() + (week - 1) * 7)
+        const dates = []
+        for (let i = 0; i < 7; i++) {
+            dates.push(`${termStartDate.getMonth()}-${termStartDate.getDate()}`)
+            termStartDate.setDate(termStartDate.getDate() + 1)
+        }
+        return dates
+    }
+
+    /**
+     * 生成课表，此函数必须要有，注入的脚步会执行此方法
+     * @param {{ termStartDate: string, week: number, courses: Object }} data
+     */
     function render(data) {
         const topBar = document.getElementById('top-bar')
         const container = document.getElementById('container')
         const bottomBar = document.getElementById('bottom-bar')
 
+        const dates = getDates(new Date(data.termStartDate), data.week)
         const dayOfWeeks = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
         const weekName = [
             "第零周",
@@ -129,7 +152,7 @@
             div.appendChild(document.createElement('br'))
 
             const pDate = document.createElement('span')
-            pDate.innerText = data.dates[i]
+            pDate.innerText = dates[i]
             div.appendChild(pDate)
             container.appendChild(div)
         }

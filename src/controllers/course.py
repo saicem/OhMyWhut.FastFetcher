@@ -7,7 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import PlainTextResponse, StreamingResponse, JSONResponse, HTMLResponse
 
 from src import config
-from src.config import TERM_START_DAY, IMAGE_TTF
+from src.config import TERM_START_DATE, IMAGE_TTF
 from src.models.form import LoginForm
 from src.services.cal_maker import IcalWriter
 from src.services.course_parser import parse_courses_from_main_page
@@ -32,7 +32,7 @@ def fetch_courses(username: str, password: str):
     return parse_courses_from_main_page(res.text)
 
 
-@router.post("/json")
+@router.post("/json", response_class=JSONResponse)
 async def course_json(form: LoginForm):
     courses = fetch_courses(form.username, form.password)
     if courses is None:
@@ -49,10 +49,10 @@ async def course_json(form: LoginForm):
 
 
 def get_current_week():
-    return (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7 + 1
+    return (datetime.date(datetime.now()) - config.TERM_START_DATE).days // 7 + 1
 
 
-@router.get("/png/{cache_id}")
+@router.get("/png/{cache_id}", response_class=StreamingResponse)
 async def course_png(cache_id: str, week: int):
     # 根据开学时间计算当前周
     if week == 0:
@@ -68,7 +68,7 @@ async def course_png(cache_id: str, week: int):
     png = CourseDrawer(
         courses=[course for course in courses if course.startWeek <= week <= course.endWeek],
         week_order=week,
-        term_start_day=TERM_START_DAY,
+        term_start_day=TERM_START_DATE,
         font=IMAGE_TTF
     ).draw()
     buf = io.BytesIO()
@@ -77,12 +77,12 @@ async def course_png(cache_id: str, week: int):
     return StreamingResponse(content=buf, media_type="image/png")
 
 
-@router.get("/cal/{cache_id}")
+@router.get("/cal/{cache_id}", response_class=StreamingResponse)
 async def course_cal(cache_id: str):
     courses = course_jar.get(cache_id)
     if courses is None:
         return PlainTextResponse(content="缓存失效", status_code=410)
-    cal = IcalWriter(TERM_START_DAY, courses).make_ical_from_course()
+    cal = IcalWriter(TERM_START_DATE, courses).make_ical_from_course()
     cal.seek(0)
     return StreamingResponse(content=cal, media_type="text/calendar",
                              headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
@@ -103,14 +103,15 @@ async def course_html(cache_id: str, week: int = 0, template: str = 'basic'):
     if template not in templates:
         return PlainTextResponse(content="不存在此模板", status_code=400)
 
-    dates = ['9-1', '9-1', '9-1', '9-1', '9-1', '9-3', '9-2']
     content = open(f'{config.APP_FOLDER_PATH}/data/templates/{template}.html').read()
     content += f"""<script>
-    data = {jsonable_encoder({
-        "courses": courses,
-        "week": week,
-        "dates": dates,
-    })}
+    data = {jsonable_encoder(
+        {
+            "courses": courses,
+            "week": week,
+            "termStartDate": config.TERM_START_DATE.strftime("%Y-%m-%d"),
+        }
+    )}
     render(data)
     </script>
     """

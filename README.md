@@ -37,6 +37,8 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 
 > 注意，因为类型标注的原因，只有 python3.9 以上可以直接运行，如果版本低于此，请删除类型标注
 
+> [main.py](src/main.py) 根据需要开关 debug reload
+
 ## 电费爬虫
 
 - 查看 [get_meter_csv.py](src/spider/get_meter_csv.py)
@@ -180,9 +182,31 @@ week 为 0 或空缺则会根据当前时间和开学日期计算
 
 ### html
 
-- 返回样例 [example.html](docs/example.html)
-- 模板列表 [templates](data/templates)
+模板列表 [templates](data/templates)
+
+通过注入类似以下的代码来使用模板
+
+```html
+
+<script>
+    data = {
+        'courses': [{
+            'name': '这是课程',
+            'room': '这是地点',
+            'teacher': '咕咕',
+            'startWeek': 10,
+            'endWeek': 13,
+            'startSection': 6,
+            'endSection': 7,
+            'dayOfWeek': 4
+        }],
+        'week': 12,
+        'termStartDate': '2022-08-29'
+    }
+    render(data)
+</script>
+```
 
 > 此接口主要方便写课表样式，通过截图功能可以方便的生成多种样式的课表图片。
 
-( •̀ ω •́ )✧ 欢迎来贡献课表样式呀 
+( •̀ ω •́ )✧ 欢迎来贡献课表样式呀
