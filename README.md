@@ -5,6 +5,7 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/saicem/OhMyWhut.FastFetcher)
 ![stars](https://img.shields.io/github/stars/saicem/OhMyWhut.FastFetcher?style=social)
 
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 ![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
 ![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
 [![Docker Image CI](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml/badge.svg)](https://github.com/saicem/OhMyWhut.FastFetcher/actions/workflows/docker-image.yml)
@@ -13,33 +14,28 @@
 
 ## 起步
 
-### 前提条件
+### 使用 docker
 
-[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
-
-```shell
-pip install -r requirements.txt
-```
-
-### 部署
-
-直接运行 [main.py](src/main.py)
-，或者使用已构建好的 [Docker 镜像](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
+[Docker 镜像地址](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
 
 ```shell
 docker pull saicem/fast-fetcher
-docker run -d -p 8000:8000 saicem/fast-fetcher 
+docker run -d -p 8000:8000 saicem/fast-fetcher
 ```
 
-根据需要修改[config.py](src/config.py)的字体，开学日期，可从环境变量读取。
-
-字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
-
-#### 环境变量
+其中环境变量如下
 
 - `TERM_START_DATE` 开学第一天，默认为 "2022-08-29"
 - `COURSE_TTF` 字体名称，默认为 "LXGWWenKaiMono-Regular.ttf"
 - `USER_AGENT` 请求头，默认为 `None`
+
+### 直接运行
+
+1. 下载所需的包 `pip install -r requirements.txt`
+2. 修改配置文件 [config.py](src/config.py)
+3. 运行 [main.py](src/main.py)
+
+> 注意，因为类型标注的原因，只有 python3.9 以上可以直接运行，如果版本低于此，请删除类型标注
 
 ## 电费爬虫
 
@@ -54,10 +50,21 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 
 ## Web API
 
-可运行 [main.py](src/main.py) 后访问 http://127.0.0.1:8000/docs 查看 swagger UI
+可运行 [main.py](src/main.py) 后访问
+http://127.0.0.1:8000/docs 查看 swagger UI
 
 - username: 智慧理工大账号
 - password: 智慧理工大密码
+
+### 校园卡余额
+
+```json
+{
+  "data": {
+    "cardMoney": "8.93元"
+  }
+}
+```
 
 ### 电费查询
 
@@ -114,28 +121,36 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 }
 ```
 
-### 课表 JSON
+### 课表
+
+访问 json 接口以获取 cache_id，获取 cache_id 后可访问其他接口
+
+> 此处考虑课表是很少改变的，所以有必要做缓存处理，请求 json 接口后就会以 lru 缓存。
+> 另外一点是考虑到新的 html 接口，需要通过 get 访问。
+
+#### json
 
 ```json
 {
   "data": {
     "courses": [
       {
-        "Name": "形势与政策",
-        "Room": "东教-合一",
-        "Teacher": "南北",
-        "StartWeek": 5,
-        "EndWeek": 8,
-        "StartSection": 6,
-        "EndSection": 7,
-        "DayOfWeek": 4
+        "name": "形势与政策",
+        "room": "东教-合一",
+        "teacher": "南北",
+        "startWeek": 5,
+        "endWeek": 8,
+        "startSection": 6,
+        "endSection": 7,
+        "dayOfWeek": 4
       }
-    ]
+    ],
+    "cache_id": "461fb9f4-6db9-4134-879e-b369d990137a"
   }
 }
 ```
 
-### 课表日历
+### 日历
 
 ```text
 BEGIN:VCALENDAR
@@ -157,30 +172,17 @@ END:VCALENDAR
 
 > 因为 markdown 不能直接提供下载链接，所以得自己手动下载一下。
 
-### 课表图片
-
-查询 body
-
-```json
-{
-  "username": "string",
-  "password": "string",
-  "week": 0
-}
-```
+### 图片
 
 week 为 0 或空缺则会根据当前时间和开学日期计算
 
-返回样例
-
 <img src="docs/course.png" width="35%" alt="课表示例图片">
 
-### 校园卡余额
+### html
 
-```json
-{
-  "data": {
-    "cardMoney": "8.93元"
-  }
-}
-```
+- 返回样例 [example.html](docs/example.html)
+- 模板列表 [templates](data/templates)
+
+> 此接口主要方便写课表样式，通过截图功能可以方便的生成多种样式的课表图片。
+
+( •̀ ω •́ )✧ 欢迎来贡献课表样式呀 
