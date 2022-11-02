@@ -5,7 +5,7 @@
 @Author      :saicem
 @version     :1.0
 """
-from spider.campus_payment_platform import *
+from src.spider.campus_payment_platform import *
 
 username = ""
 password = ""

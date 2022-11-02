@@ -1,8 +1,6 @@
 import textwrap
 
-from PIL.ImageFont import FreeTypeFont
-
-from lib.course.config import *
+from src.services.course_png.config import *
 
 
 # 获取要绘制的课表格子的坐标

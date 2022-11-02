@@ -4,7 +4,7 @@ import execjs
 
 
 def des3(username: str, password: str, lt: str) -> str:
-    js_path = os.path.dirname(__file__) + "/encode.js"
+    js_path = "../../data/static/encode.js"
     encode_js = open(js_path, "r", encoding="utf-8").read()
     # 加载 js 脚本
     ctx = execjs.compile(encode_js)

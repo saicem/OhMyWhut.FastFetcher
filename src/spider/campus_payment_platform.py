@@ -1,8 +1,6 @@
-from urllib.parse import urlencode
-
 from requests import Session
 
-from lib.ias import Ias
+from src.services.ias import Ias
 
 FACTORY_CODE = "E035"
 AREA_ID_东院 = "0001"

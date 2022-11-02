@@ -1,7 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
+from PIL.ImageFont import FreeTypeFont
 
-from lib.course.course import Course
-from lib.course.util import *
+from src.services.course_parser import Course
+from src.services.course_png.util import *
 
 
 class CourseDrawer:

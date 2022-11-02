@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 ### 部署
 
-直接运行 [main.py](main.py)
+直接运行 [main.py](src/main.py)
 ，或者使用已构建好的 [Docker 镜像](https://hub.docker.com/repository/docker/saicem/fast-fetcher)
 
 ```shell
@@ -31,7 +31,7 @@ docker pull saicem/fast-fetcher
 docker run -d -p 8000:8000 saicem/fast-fetcher 
 ```
 
-根据需要修改[config.py](config.py)的字体，开学日期，可从环境变量读取。
+根据需要修改[config.py](src/config.py)的字体，开学日期，可从环境变量读取。
 
 字体用的是[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)，可以自行更改
 
@@ -43,7 +43,7 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 
 ## 电费爬虫
 
-- 查看 [get_meter_csv.py](spider/get_meter_csv.py)
+- 查看 [get_meter_csv.py](src/spider/get_meter_csv.py)
 
 > 可能因为登录状态丢失导致爬虫中途挂了，从断的地方继续就好。
 
@@ -54,7 +54,7 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 
 ## Web API
 
-可运行 [main.py](main.py) 后访问 http://127.0.0.1:8000/docs 查看 swagger UI
+可运行 [main.py](src/main.py) 后访问 http://127.0.0.1:8000/docs 查看 swagger UI
 
 - username: 智慧理工大账号
 - password: 智慧理工大密码
@@ -72,7 +72,7 @@ docker run -d -p 8000:8000 saicem/fast-fetcher
 }
 ```
 
-- meterId: 查看 [meter_2210.csv](docs/meter_2210.csv)，或自行爬取，代码参考 [spider](spider) 文件夹
+- meterId: 查看 [meter_2210.csv](docs/meter_2210.csv)，或自行爬取，代码参考 [spider](src/spider) 文件夹
 - factoryCode: 固定为 "E035"
 
 返回样例

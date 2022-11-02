@@ -2,7 +2,7 @@ import io
 import uuid
 from datetime import datetime, timedelta
 
-from lib.course.course import Course
+from src.services.course_parser import Course
 
 START_TIME_DIC = {
     1: timedelta(hours=8),
