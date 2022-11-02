@@ -8,7 +8,7 @@ from starlette.responses import PlainTextResponse, StreamingResponse, JSONRespon
 
 from src import config
 from src.config import TERM_START_DAY, IMAGE_TTF
-from src.models.form import CoursePngForm, LoginForm
+from src.models.form import LoginForm
 from src.services.cal_maker import IcalWriter
 from src.services.course_parser import parse_courses_from_main_page
 from src.services.course_png.picgen import CourseDrawer
