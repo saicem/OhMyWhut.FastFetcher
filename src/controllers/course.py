@@ -1,4 +1,5 @@
 import io
+import uuid
 from datetime import datetime
 
 from fastapi import APIRouter
@@ -12,31 +13,61 @@ from src.services.cal_maker import IcalWriter
 from src.services.course_parser import parse_courses_from_main_page
 from src.services.course_png.picgen import CourseDrawer
 from src.services.ias import Ias
+from src.services.lru_dict import LruDict
 
 router = APIRouter(
     prefix='/course',
     tags=['course']
 )
 
+course_jar = LruDict(128)
 
-@router.post("/png")
-async def course_png(form: CoursePngForm):
-    # 根据开学时间计算当前周
-    if form.week == 0:
-        form.week = (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7 + 1
 
-    if not 1 <= form.week <= 20:
-        return PlainTextResponse(content="周次应该在 1~20", status_code=400)
-
-    ias = Ias(form.username, form.password)
+async def fetch_courses(username: str, password: str):
+    ias = Ias(username, password)
     if not ias.login():
-        return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
+        return None
 
     res = ias.fetch_jwc_main_page()
-    courses = parse_courses_from_main_page(res.text)
+    return parse_courses_from_main_page(res.text)
+
+
+@router.post("/json")
+async def course_json(form: LoginForm):
+    courses = fetch_courses(form.username, form.password)
+    if courses is None:
+        return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
+
+    cache_id = str(uuid.uuid4())
+    course_jar.add(cache_id, courses)
+    return JSONResponse(content=jsonable_encoder(
+        {
+            "data": {"courses": courses},
+            "cache_id": cache_id,
+        }
+    ))
+
+
+def get_current_week():
+    return (datetime.date(datetime.now()) - config.TERM_START_DAY).days // 7 + 1
+
+
+@router.get("/png/{cache_id}")
+async def course_png(cache_id: str, week: int):
+    # 根据开学时间计算当前周
+    if week == 0:
+        week = get_current_week()
+
+    if not 1 <= week <= 20:
+        return PlainTextResponse(content="周次应该在 1~20", status_code=400)
+
+    courses = course_jar.get(cache_id)
+    if courses is None:
+        return PlainTextResponse(content="缓存失效", status_code=410)
+
     png = CourseDrawer(
-        courses=[course for course in courses if course.StartWeek <= form.week <= course.EndWeek],
-        week_order=form.week,
+        courses=[course for course in courses if course.StartWeek <= week <= course.EndWeek],
+        week_order=week,
         term_start_day=TERM_START_DAY,
         font=IMAGE_TTF
     ).draw()
@@ -46,23 +77,11 @@ async def course_png(form: CoursePngForm):
     return StreamingResponse(content=buf, media_type="image/png")
 
 
-@router.post("/course/json")
-async def course_json(form: LoginForm):
-    ias = Ias(form.username, form.password)
-    if not ias.login():
-        return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
-    res = ias.fetch_jwc_main_page()
-    courses = parse_courses_from_main_page(res.text)
-    return JSONResponse(content=jsonable_encoder({"data": {"courses": courses}}))
-
-
-@router.post("/course/cal")
-async def course_ical(form: LoginForm):
-    ias = Ias(form.username, form.password)
-    if not ias.login():
-        return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
-    res = ias.fetch_jwc_main_page()
-    courses = parse_courses_from_main_page(res.text)
+@router.get("/cal")
+async def course_ical(cache_id: str):
+    courses = course_jar.get(cache_id)
+    if courses is None:
+        return PlainTextResponse(content="缓存失效", status_code=410)
     cal = IcalWriter(TERM_START_DAY, courses).make_ical_from_course()
     cal.seek(0)
     return StreamingResponse(content=cal, media_type="text/calendar",
