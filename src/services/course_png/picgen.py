@@ -52,18 +52,18 @@ class CourseDrawer:
             xy=course_box_xy,
             radius=COURSE_RADIUS,
             outline=(255, 255, 255),
-            fill=get_color(course.DayOfWeek),
+            fill=get_color(course.dayOfWeek),
             width=2,
         )
         self.__draw_text_course_name(
-            course.Name,
+            course.name,
             (
                 course_box_xy[0] + COURSE_NAME_ANCHOR[0],
                 course_box_xy[1] + COURSE_NAME_ANCHOR[1],
             ),
         )
         self.__draw_text_course_place(
-            course.Room,
+            course.room,
             (
                 course_box_xy[0] + COURSE_ROOM_ANCHOR[0],
                 course_box_xy[3] + COURSE_ROOM_ANCHOR[1],
@@ -74,9 +74,9 @@ class CourseDrawer:
         for course in self.__courses:
             self.__draw_course(
                 get_course_coordinate(
-                    course.DayOfWeek,
-                    course.StartSection,
-                    course.EndSection
+                    course.dayOfWeek,
+                    course.startSection,
+                    course.endSection
                 ),
                 course,
             )

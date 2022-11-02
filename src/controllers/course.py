@@ -4,7 +4,7 @@ from datetime import datetime
 
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import PlainTextResponse, StreamingResponse, JSONResponse
+from starlette.responses import PlainTextResponse, StreamingResponse, JSONResponse, HTMLResponse
 
 from src import config
 from src.config import TERM_START_DAY, IMAGE_TTF
@@ -23,7 +23,7 @@ router = APIRouter(
 course_jar = LruDict(128)
 
 
-async def fetch_courses(username: str, password: str):
+def fetch_courses(username: str, password: str):
     ias = Ias(username, password)
     if not ias.login():
         return None
@@ -66,7 +66,7 @@ async def course_png(cache_id: str, week: int):
         return PlainTextResponse(content="缓存失效", status_code=410)
 
     png = CourseDrawer(
-        courses=[course for course in courses if course.StartWeek <= week <= course.EndWeek],
+        courses=[course for course in courses if course.startWeek <= week <= course.endWeek],
         week_order=week,
         term_start_day=TERM_START_DAY,
         font=IMAGE_TTF
@@ -77,8 +77,8 @@ async def course_png(cache_id: str, week: int):
     return StreamingResponse(content=buf, media_type="image/png")
 
 
-@router.get("/cal")
-async def course_ical(cache_id: str):
+@router.get("/cal/{cache_id}")
+async def course_cal(cache_id: str):
     courses = course_jar.get(cache_id)
     if courses is None:
         return PlainTextResponse(content="缓存失效", status_code=410)
@@ -86,3 +86,32 @@ async def course_ical(cache_id: str):
     cal.seek(0)
     return StreamingResponse(content=cal, media_type="text/calendar",
                              headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
+
+
+templates = {'basic'}
+
+
+@router.get("/html/{cache_id}", response_class=HTMLResponse)
+async def course_html(cache_id: str, week: int = 0, template: str = 'basic'):
+    if not 0 <= week <= 20:
+        return PlainTextResponse(content="周次应该在 1~20", status_code=400)
+
+    courses = course_jar.get(cache_id)
+    if courses is None:
+        return PlainTextResponse(content="缓存失效", status_code=410)
+
+    if template not in templates:
+        return PlainTextResponse(content="不存在此模板", status_code=400)
+
+    dates = ['9-1', '9-1', '9-1', '9-1', '9-1', '9-3', '9-2']
+    content = open(f'{config.APP_FOLDER_PATH}/data/templates/{template}.html').read()
+    content += f"""<script>
+    data = {jsonable_encoder({
+        "courses": courses,
+        "week": week,
+        "dates": dates,
+    })}
+    render(data)
+    </script>
+    """
+    return HTMLResponse(content=content)

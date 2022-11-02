@@ -11,4 +11,4 @@ class LruDict:
             del self.jar[next(iter(self.jar))]
 
     def get(self, key: str):
-        return self.get(key, None)
+        return self.jar.get(key, None)

@@ -16,11 +16,11 @@ class Course:
         :param end_section: 2,4,5,7,8,10,12,13
         :param day_of_week: 0~6
         """
-        self.Name: str = name
-        self.Room: str = room
-        self.Teacher: str = teacher
-        self.StartWeek: int = start_week
-        self.EndWeek: int = end_week
-        self.StartSection: int = start_section
-        self.EndSection: int = end_section
-        self.DayOfWeek: int = day_of_week
+        self.name: str = name
+        self.room: str = room
+        self.teacher: str = teacher
+        self.startWeek: int = start_week
+        self.endWeek: int = end_week
+        self.startSection: int = start_section
+        self.endSection: int = end_section
+        self.dayOfWeek: int = day_of_week
