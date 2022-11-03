@@ -147,7 +147,7 @@ http://127.0.0.1:8000/docs 查看 swagger UI
         "dayOfWeek": 4
       }
     ],
-    "cache_id": "461fb9f4-6db9-4134-879e-b369d990137a"
+    "cacheId": "461fb9f4-6db9-4134-879e-b369d990137a"
   }
 }
 ```

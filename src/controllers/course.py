@@ -43,7 +43,7 @@ async def course_json(form: LoginForm):
     return JSONResponse(content=jsonable_encoder(
         {
             "data": {"courses": courses},
-            "cache_id": cache_id,
+            "cacheId": cache_id,
         }
     ))
 
