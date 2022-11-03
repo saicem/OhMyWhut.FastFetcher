@@ -19,6 +19,8 @@ RUN if [[ -n "${PIP_REGISTRY}" ]]; then pip config set global.index-url ${PIP_RE
 
 COPY . .
 
-ENTRYPOINT [ "uvicorn" ,"src/main:app","--host", "0.0.0.0", "--port"]
+WORKDIR /app/src
+
+ENTRYPOINT [ "uvicorn" ,"main:app","--host", "0.0.0.0", "--port"]
 
 CMD [ "8000"]

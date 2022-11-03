@@ -1,6 +1,6 @@
 import textwrap
 
-from src.services.course_png.config import *
+from services.course_png.config import *
 
 
 # 获取要绘制的课表格子的坐标

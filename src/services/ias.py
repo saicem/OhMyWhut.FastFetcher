@@ -5,8 +5,8 @@ import requests
 from lxml import etree
 from requests import Response
 
-from src import config
-from src.services.js_reader import des3
+import config
+from services.js_reader import des3
 
 
 class Ias:

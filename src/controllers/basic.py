@@ -2,8 +2,8 @@ from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse, PlainTextResponse
 
-from src.services.ias import Ias
-from src.models.form import LoginForm, ElectricForm
+from models.form import ElectricForm, LoginForm
+from services.ias import Ias
 
 router = APIRouter()
 

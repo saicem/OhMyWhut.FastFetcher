@@ -1,6 +1,6 @@
 from requests import Session
 
-from src.services.ias import Ias
+from services.ias import Ias
 
 FACTORY_CODE = "E035"
 AREA_ID_东院 = "0001"

@@ -3,7 +3,7 @@ import re
 from lxml import etree
 from lxml.etree import _Element
 
-from src.models.course import Course
+from models.course import Course
 
 
 def parse_courses_from_main_page(html: str) -> list[Course]:

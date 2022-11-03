@@ -6,14 +6,14 @@ from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import PlainTextResponse, StreamingResponse, JSONResponse, HTMLResponse
 
-from src import config
-from src.config import TERM_START_DATE, IMAGE_TTF
-from src.models.form import LoginForm
-from src.services.cal_maker import IcalWriter
-from src.services.course_parser import parse_courses_from_main_page
-from src.services.course_png.picgen import CourseDrawer
-from src.services.ias import Ias
-from src.services.lru_dict import LruDict
+import config
+from config import TERM_START_DATE, IMAGE_TTF
+from models.form import LoginForm
+from services.cal_maker import IcalWriter
+from services.course_parser import parse_courses_from_main_page
+from services.course_png.picgen import CourseDrawer
+from services.ias import Ias
+from services.lru_dict import LruDict
 
 router = APIRouter(
     prefix='/course',

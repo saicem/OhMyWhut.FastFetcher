@@ -1,10 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
 
+import config
 from controllers import basic
 from controllers import course
-from src import config
-from src.middlewares.header import ResponseHeaderMiddleware
+from middlewares.header import ResponseHeaderMiddleware
 
 app = FastAPI()
 app.add_middleware(ResponseHeaderMiddleware, version=config.APP_VERSION)

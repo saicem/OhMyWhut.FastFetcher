@@ -1,8 +1,6 @@
-import os
-
 import execjs
 
-from src import config
+import config
 
 
 def des3(username: str, password: str, lt: str) -> str:
