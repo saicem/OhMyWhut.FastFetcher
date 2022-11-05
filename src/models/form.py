@@ -13,3 +13,7 @@ class ElectricForm(LoginForm):
 
 class CoursePngForm(LoginForm):
     week: int = 0
+
+
+class CourseHtmlForm(CoursePngForm):
+    template: str = "basic"
