@@ -49,7 +49,7 @@ class CampusPaymentPlatform:
         return [item.split("@") for item in area_list]
 
     def query_build_list(
-            self, area_id: str, factory_code: str
+        self, area_id: str, factory_code: str
     ) -> list[tuple[str, str]]:
         """
         获取建筑信息
@@ -64,7 +64,7 @@ class CampusPaymentPlatform:
         return [item.split("@") for item in build_list]
 
     def query_floor_list(
-            self, area_id: str, build_id: str, factory_code: str
+        self, area_id: str, build_id: str, factory_code: str
     ) -> list[int]:
         """
         获取楼层信息
@@ -80,7 +80,7 @@ class CampusPaymentPlatform:
         return floor_list
 
     def query_room_info(
-            self, build_id: str, floor: int, factory_code: str
+        self, build_id: str, floor: int, factory_code: str
     ) -> list[tuple[str, str]]:
         """
         获取楼层有多少宿舍的信息

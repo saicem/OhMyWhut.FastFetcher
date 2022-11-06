@@ -5,7 +5,7 @@ from services.course_png.config import *
 
 # 获取要绘制的课表格子的坐标
 def get_course_coordinate(
-        day_of_week: int, start_section: int, end_section: int
+    day_of_week: int, start_section: int, end_section: int
 ) -> tuple[int, int, int, int]:
     # 周日为 0 但周日要排在最后
     x0 = MARGIN_LEFT + COURSE_WIDTH * (6 if day_of_week == 0 else day_of_week - 1)

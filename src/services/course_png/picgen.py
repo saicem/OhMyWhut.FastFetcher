@@ -7,11 +7,11 @@ from services.course_png.util import *
 
 class CourseDrawer:
     def __init__(
-            self,
-            courses: list[Course],
-            week_order: int,
-            term_start_day: datetime,
-            font: FreeTypeFont = ImageFont.load_default(),
+        self,
+        courses: list[Course],
+        week_order: int,
+        term_start_day: datetime,
+        font: FreeTypeFont = ImageFont.load_default(),
     ):
         self.__term_start_day = term_start_day
         self.__image = Image.new("RGBA", (BASE_WIDTH, BASE_HEIGHT), (255, 255, 255))
@@ -99,7 +99,7 @@ class CourseDrawer:
             if right == length:
                 texts.append(text[left:right])
                 break
-            if self.__font.getlength(text[left: right + 1]) > COURSE_TEXT_MAXLEN:
+            if self.__font.getlength(text[left : right + 1]) > COURSE_TEXT_MAXLEN:
                 texts.append(text[left:right])
                 left = right
             right += 1

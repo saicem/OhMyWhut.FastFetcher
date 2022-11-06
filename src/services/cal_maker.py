@@ -40,7 +40,7 @@ class IcalWriter:
             self.term_start_date, course.startWeek, course.dayOfWeek
         )
         date_start = (
-                start_day + START_TIME_DIC[course.startSection] - timedelta(hours=8)
+            start_day + START_TIME_DIC[course.startSection] - timedelta(hours=8)
         )
         date_end = start_day + END_TIME_DIC[course.endSection] - timedelta(hours=8)
         start_day.strftime("%Y%m%dT%H%M%SZ")

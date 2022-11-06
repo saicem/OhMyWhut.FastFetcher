@@ -66,7 +66,7 @@ class Ias:
             "http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fsso.jwc.whut.edu.cn%2FCertification%2Findex2.jsp"
         )
         if not res.url.startswith(
-                "http://sso.jwc.whut.edu.cn/Certification/index2.jsp"
+            "http://sso.jwc.whut.edu.cn/Certification/index2.jsp"
         ):
             raise Exception("登录教务处失败")
 
@@ -75,7 +75,7 @@ class Ias:
             headers={"Referrer": res.url},
         )
         if not res.url.startswith(
-                "http://sso.jwc.whut.edu.cn/Certification/toIndex.do"
+            "http://sso.jwc.whut.edu.cn/Certification/toIndex.do"
         ):
             raise Exception("登录教务处失败")
 

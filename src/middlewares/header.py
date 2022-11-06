@@ -5,9 +5,9 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 class ResponseHeaderMiddleware(BaseHTTPMiddleware):
     def __init__(
-            self,
-            app,
-            version,
+        self,
+        app,
+        version,
     ):
         super().__init__(app)
         self.version = version
