@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Black Lint CI
 
 on:
   push:
