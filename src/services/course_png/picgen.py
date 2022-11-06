@@ -11,7 +11,7 @@ class CourseDrawer:
             courses: list[Course],
             week_order: int,
             term_start_day: datetime,
-            font: FreeTypeFont = ImageFont.load_default()
+            font: FreeTypeFont = ImageFont.load_default(),
     ):
         self.__term_start_day = term_start_day
         self.__image = Image.new("RGBA", (BASE_WIDTH, BASE_HEIGHT), (255, 255, 255))
@@ -74,17 +74,13 @@ class CourseDrawer:
         for course in self.__courses:
             self.__draw_course(
                 get_course_coordinate(
-                    course.dayOfWeek,
-                    course.startSection,
-                    course.endSection
+                    course.dayOfWeek, course.startSection, course.endSection
                 ),
                 course,
             )
 
     # 渲染课程名称
-    def __draw_text_course_name(
-            self, text: str, anchor
-    ) -> None:
+    def __draw_text_course_name(self, text: str, anchor) -> None:
         draw_text = self.format_text(text)
         self.__image_draw.text(
             (anchor[0], anchor[1]),
@@ -111,9 +107,7 @@ class CourseDrawer:
 
     # https://www.osgeo.cn/pillow/reference/ImageFont.html
     # 上课地点信息格式化
-    def __draw_text_course_place(
-            self, text: str, anchor
-    ) -> None:
+    def __draw_text_course_place(self, text: str, anchor) -> None:
         text = self.format_text(text)
         _, compensate_height = self.__font.getsize_multiline(text)
         self.__image_draw.text(

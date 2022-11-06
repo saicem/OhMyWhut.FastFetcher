@@ -46,9 +46,11 @@ class CampusPaymentPlatform:
         data = f"factorycode={factory_code}"
         res = self.session.post(url=url, headers=self.headers, data=data)
         area_list = res.json()["areaList"]
-        return [item.split('@') for item in area_list]
+        return [item.split("@") for item in area_list]
 
-    def query_build_list(self, area_id: str, factory_code: str) -> list[tuple[str, str]]:
+    def query_build_list(
+            self, area_id: str, factory_code: str
+    ) -> list[tuple[str, str]]:
         """
         获取建筑信息
         :param area_id: 从 get_area_info 获取
@@ -59,9 +61,11 @@ class CampusPaymentPlatform:
         data = f"areaid={area_id}&factorycode={factory_code}"
         res = self.session.post(url=url, headers=self.headers, data=data)
         build_list = res.json()["buildList"]
-        return [item.split('@') for item in build_list]
+        return [item.split("@") for item in build_list]
 
-    def query_floor_list(self, area_id: str, build_id: str, factory_code: str) -> list[int]:
+    def query_floor_list(
+            self, area_id: str, build_id: str, factory_code: str
+    ) -> list[int]:
         """
         获取楼层信息
         :param factory_code: 固定 E035
@@ -75,7 +79,9 @@ class CampusPaymentPlatform:
         floor_list = res.json()["floorList"]
         return floor_list
 
-    def query_room_info(self, build_id: str, floor: int, factory_code: str) -> list[tuple[str, str]]:
+    def query_room_info(
+            self, build_id: str, floor: int, factory_code: str
+    ) -> list[tuple[str, str]]:
         """
         获取楼层有多少宿舍的信息
         :param build_id: 从 query_build_list 获取
@@ -87,7 +93,7 @@ class CampusPaymentPlatform:
         data = f"buildid={build_id}&floorid={floor}&factorycode={factory_code}"
         res = self.session.post(url=url, headers=self.headers, data=data)
         room_list = res.json()["roomList"]
-        return [item.split('@') for item in room_list]
+        return [item.split("@") for item in room_list]
 
     def query_meter_id(self, room_id: str, factory_code: str) -> str:
         """

@@ -22,26 +22,24 @@ async def electric(form: ElectricForm):
         if "remainPower" in res_json and "remainName" in res_json
         else "无数据"
     )
-    remain_fee = (
-        f"{res_json['meterOverdue']}元"
-        if "meterOverdue" in res_json
-        else "无数据"
-    )
+    remain_fee = f"{res_json['meterOverdue']}元" if "meterOverdue" in res_json else "无数据"
     total_power = (
         f"{res_json['ZVlaue']}{res_json['unit']}"
         if "ZVlaue" in res_json and "unit" in res_json
         else "无数据"
     )
 
-    return JSONResponse(content=jsonable_encoder(
-        {
-            "data": {
-                "remainPower": remain_power,
-                "totalPower": total_power,
-                "remainFee": remain_fee,
+    return JSONResponse(
+        content=jsonable_encoder(
+            {
+                "data": {
+                    "remainPower": remain_power,
+                    "totalPower": total_power,
+                    "remainFee": remain_fee,
+                }
             }
-        }
-    ))
+        )
+    )
 
 
 @router.post("/books")
@@ -50,13 +48,13 @@ async def books(form: LoginForm):
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
     res = ias.fetch_books()
-    raw_books = res.json()['list']
+    raw_books = res.json()["list"]
 
     def filter_book(book: {}):
         return {
-            "name": book['ZBT'],
-            "expire": book['DQRQ'],
-            "borrow": book['JYRQ'],
+            "name": book["ZBT"],
+            "expire": book["DQRQ"],
+            "borrow": book["JYRQ"],
         }
 
     cooked_books = [filter_book(book) for book in raw_books]
@@ -69,5 +67,9 @@ async def get_card_money(form: LoginForm):
     if not ias.login():
         return PlainTextResponse(content="登录失败,检查账密是否正确！", status_code=401)
     res = ias.fetch_card_money()
-    money = int(res.json()['KHYE'])
-    return JSONResponse(content=jsonable_encoder({"data": {"cardMoney": f"{money // 100}.{money % 100}元"}}))
+    money = int(res.json()["KHYE"])
+    return JSONResponse(
+        content=jsonable_encoder(
+            {"data": {"cardMoney": f"{money // 100}.{money % 100}元"}}
+        )
+    )

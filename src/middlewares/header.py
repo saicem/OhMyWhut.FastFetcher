@@ -14,5 +14,5 @@ class ResponseHeaderMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
-        response.headers.append('x-app-version', self.version)
+        response.headers.append("x-app-version", self.version)
         return response

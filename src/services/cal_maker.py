@@ -24,7 +24,9 @@ END_TIME_DIC = {
 
 
 def compute_start_day(term_start_day: datetime, week: int, dow: int) -> datetime:
-    return term_start_day + (week * 7 + (6 if dow == 0 else dow - 1)) * timedelta(days=1)
+    return term_start_day + (week * 7 + (6 if dow == 0 else dow - 1)) * timedelta(
+        days=1
+    )
 
 
 class IcalWriter:
@@ -34,8 +36,12 @@ class IcalWriter:
         self.term_start_date = term_start_date
 
     def write_event(self, course: Course):
-        start_day = compute_start_day(self.term_start_date, course.startWeek, course.dayOfWeek)
-        date_start = start_day + START_TIME_DIC[course.startSection] - timedelta(hours=8)
+        start_day = compute_start_day(
+            self.term_start_date, course.startWeek, course.dayOfWeek
+        )
+        date_start = (
+                start_day + START_TIME_DIC[course.startSection] - timedelta(hours=8)
+        )
         date_end = start_day + END_TIME_DIC[course.endSection] - timedelta(hours=8)
         start_day.strftime("%Y%m%dT%H%M%SZ")
         self.ical.write("BEGIN:VEVENT\n")
@@ -45,7 +51,9 @@ class IcalWriter:
         self.ical.write(f"DESCRIPTION:{course.teacher}\n")
         self.ical.write(f"DTSTART:{date_start.strftime('%Y%m%dT%H%M%SZ')}\n")
         self.ical.write(f"DTEND:{date_end.strftime('%Y%m%dT%H%M%SZ')}\n")
-        self.ical.write(f"RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT={course.endWeek - course.startWeek + 1}\n")
+        self.ical.write(
+            f"RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT={course.endWeek - course.startWeek + 1}\n"
+        )
         self.ical.write("END:VEVENT\n")
 
     def make_ical_from_course(self):

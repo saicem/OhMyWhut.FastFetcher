@@ -20,9 +20,6 @@ def get_course_coordinate(
     return x0, y0, x1, y1
 
 
-
-
-
 def get_week_order_name(week_order: int):
     dic = {
         1: "第一周",

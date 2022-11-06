@@ -1,13 +1,15 @@
 class Course:
-    def __init__(self,
-                 name: str,
-                 room: str,
-                 teacher: str,
-                 start_week: int,
-                 end_week: int,
-                 start_section: int,
-                 end_section: int,
-                 day_of_week: int):
+    def __init__(
+            self,
+            name: str,
+            room: str,
+            teacher: str,
+            start_week: int,
+            end_week: int,
+            start_section: int,
+            end_section: int,
+            day_of_week: int,
+    ):
         """
         课程实例
         :param name: course name

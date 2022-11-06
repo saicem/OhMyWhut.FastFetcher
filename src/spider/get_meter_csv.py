@@ -16,20 +16,27 @@ def write_meter_csv(cpp: CampusPaymentPlatform):
     需要先运行 get_room_csv
     获取宿舍的电表信息
     """
-    reader = open("room.csv", "r", encoding='utf-8')
-    writer = open("meter.csv", "w", encoding='utf-8')
+    reader = open("room.csv", "r", encoding="utf-8")
+    writer = open("meter.csv", "w", encoding="utf-8")
     writer.write("room_name,meter_id")
 
     reader.readline()
     for line in reader:
-        (area_id, build_id, build_name, floor, room_id, room_name) = line.rstrip().split(',')
+        (
+            area_id,
+            build_id,
+            build_name,
+            floor,
+            room_id,
+            room_name,
+        ) = line.rstrip().split(",")
         meter_id = cpp.query_meter_id(room_id, FACTORY_CODE)
         print(f"{room_name}: {meter_id}")
         writer.write(f"\n{room_name},{meter_id}")
 
 
 def write_room_csv(cpp: CampusPaymentPlatform):
-    writer = open('room.csv', 'w', encoding='utf-8')
+    writer = open("room.csv", "w", encoding="utf-8")
     writer.write("area_id,build_id,build_name,floor,room_id,room_name")
 
     area_ids = [AREA_ID_东院, AREA_ID_西院, AREA_ID_南湖, AREA_ID_鉴湖, AREA_ID_余区]
@@ -41,7 +48,9 @@ def write_room_csv(cpp: CampusPaymentPlatform):
                 room_list = cpp.query_room_info(build_id, floor, FACTORY_CODE)
                 for room_id, room_name in room_list:
                     print(f"{room_name}")
-                    writer.write(f"\n{area_id},{build_id},{build_name},{floor},{room_id},{room_name}")
+                    writer.write(
+                        f"\n{area_id},{build_id},{build_name},{floor},{room_id},{room_name}"
+                    )
     writer.close()
 
 

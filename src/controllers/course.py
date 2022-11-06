@@ -4,7 +4,12 @@ from datetime import datetime
 
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import PlainTextResponse, StreamingResponse, JSONResponse, HTMLResponse
+from starlette.responses import (
+    PlainTextResponse,
+    StreamingResponse,
+    JSONResponse,
+    HTMLResponse,
+)
 
 import config
 from config import TERM_START_DATE, IMAGE_TTF
@@ -16,10 +21,7 @@ from services.course_png.picgen import CourseDrawer
 from services.ias import Ias
 from services.lru_dict import LruDict
 
-router = APIRouter(
-    prefix='/course',
-    tags=['course']
-)
+router = APIRouter(prefix="/course", tags=["course"])
 
 course_jar = LruDict(128)
 
@@ -41,12 +43,14 @@ async def course_json(form: LoginForm):
 
     cache_id = str(uuid.uuid4())
     course_jar.add(cache_id, courses)
-    return JSONResponse(content=jsonable_encoder(
-        {
-            "data": {"courses": courses},
-            "cacheId": cache_id,
-        }
-    ))
+    return JSONResponse(
+        content=jsonable_encoder(
+            {
+                "data": {"courses": courses},
+                "cacheId": cache_id,
+            }
+        )
+    )
 
 
 def get_current_week():
@@ -67,13 +71,17 @@ async def course_png(form: CoursePngForm):
         return PlainTextResponse(content="周次应该在 1~20", status_code=400)
 
     png = CourseDrawer(
-        courses=[course for course in courses if course.startWeek <= form.week <= course.endWeek],
+        courses=[
+            course
+            for course in courses
+            if course.startWeek <= form.week <= course.endWeek
+        ],
         week_order=form.week,
         term_start_day=TERM_START_DATE,
-        font=IMAGE_TTF
+        font=IMAGE_TTF,
     ).draw()
     buf = io.BytesIO()
-    png.save(buf, format='png')
+    png.save(buf, format="png")
     buf.seek(0)
     return StreamingResponse(content=buf, media_type="image/png")
 
@@ -92,13 +100,15 @@ async def course_png(cache_id: str, week: int):
         return PlainTextResponse(content="周次应该在 1~20", status_code=400)
 
     png = CourseDrawer(
-        courses=[course for course in courses if course.startWeek <= week <= course.endWeek],
+        courses=[
+            course for course in courses if course.startWeek <= week <= course.endWeek
+        ],
         week_order=week,
         term_start_day=TERM_START_DATE,
-        font=IMAGE_TTF
+        font=IMAGE_TTF,
     ).draw()
     buf = io.BytesIO()
-    png.save(buf, format='png')
+    png.save(buf, format="png")
     buf.seek(0)
     return StreamingResponse(content=buf, media_type="image/png")
 
@@ -110,8 +120,11 @@ async def course_cal_post(form: LoginForm):
         return PlainTextResponse(content="获取课表失败", status_code=400)
     cal = IcalWriter(TERM_START_DATE, courses).make_ical_from_course()
     cal.seek(0)
-    return StreamingResponse(content=cal, media_type="text/calendar",
-                             headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
+    return StreamingResponse(
+        content=cal,
+        media_type="text/calendar",
+        headers={"Content-Disposition": 'attachment; filename="courses.ics"'},
+    )
 
 
 @router.get("/cal/{cache_id}", response_class=StreamingResponse)
@@ -121,15 +134,18 @@ async def course_cal(cache_id: str):
         return PlainTextResponse(content="缓存失效", status_code=410)
     cal = IcalWriter(TERM_START_DATE, courses).make_ical_from_course()
     cal.seek(0)
-    return StreamingResponse(content=cal, media_type="text/calendar",
-                             headers={'Content-Disposition': 'attachment; filename="courses.ics"'})
+    return StreamingResponse(
+        content=cal,
+        media_type="text/calendar",
+        headers={"Content-Disposition": 'attachment; filename="courses.ics"'},
+    )
 
 
-templates = {'basic'}
+templates = {"basic"}
 
 
 def render_course_html(template: str, courses: list[Course], week: int):
-    content = open(f'{config.APP_FOLDER_PATH}/data/templates/{template}.html').read()
+    content = open(f"{config.APP_FOLDER_PATH}/data/templates/{template}.html").read()
     content += f"""<script>
         data = {jsonable_encoder(
         {
@@ -160,7 +176,7 @@ async def course_html_post(form: CourseHtmlForm):
 
 
 @router.get("/html/{cache_id}", response_class=HTMLResponse)
-async def course_html(cache_id: str, week: int = 0, template: str = 'basic'):
+async def course_html(cache_id: str, week: int = 0, template: str = "basic"):
     courses = course_jar.get(cache_id)
     if courses is None:
         return PlainTextResponse(content="缓存失效", status_code=410)

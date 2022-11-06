@@ -24,14 +24,17 @@ class Ias:
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             },
-            data=urlencode({
-                "rsa": des3(self.__username, self.__password, lt),
-                "ul": len(self.__username),
-                "pl": len(self.__password),
-                "lt": lt,
-                "execution": "e1s1",
-                "_eventId": "submit",
-            }))
+            data=urlencode(
+                {
+                    "rsa": des3(self.__username, self.__password, lt),
+                    "ul": len(self.__username),
+                    "pl": len(self.__password),
+                    "lt": lt,
+                    "execution": "e1s1",
+                    "_eventId": "submit",
+                }
+            ),
+        )
 
         return res.url.startswith("http://zhlgd.whut.edu.cn/tp_up/view")
 
@@ -42,10 +45,7 @@ class Ias:
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             },
-            data=urlencode({
-                "meterId": meter_id,
-                "factorycode": factory_code
-            })
+            data=urlencode({"meterId": meter_id, "factorycode": factory_code}),
         )
 
     def fetch_books(self) -> Response:
@@ -63,12 +63,20 @@ class Ias:
 
     def fetch_jwc_main_page(self) -> Response:
         res = self.session.get(
-            "http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fsso.jwc.whut.edu.cn%2FCertification%2Findex2.jsp")
-        if not res.url.startswith("http://sso.jwc.whut.edu.cn/Certification/index2.jsp"):
+            "http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fsso.jwc.whut.edu.cn%2FCertification%2Findex2.jsp"
+        )
+        if not res.url.startswith(
+                "http://sso.jwc.whut.edu.cn/Certification/index2.jsp"
+        ):
             raise Exception("登录教务处失败")
 
-        res = self.session.get("http://sso.jwc.whut.edu.cn/Certification/casindex.do", headers={"Referrer": res.url})
-        if not res.url.startswith("http://sso.jwc.whut.edu.cn/Certification/toIndex.do"):
+        res = self.session.get(
+            "http://sso.jwc.whut.edu.cn/Certification/casindex.do",
+            headers={"Referrer": res.url},
+        )
+        if not res.url.startswith(
+                "http://sso.jwc.whut.edu.cn/Certification/toIndex.do"
+        ):
             raise Exception("登录教务处失败")
 
         self.session.get("http://218.197.102.183/Course")
@@ -80,6 +88,8 @@ class Ias:
         """
         获取校园卡余额，单位（分）
         """
-        return self.session.post(url="http://zhlgd.whut.edu.cn/tp_up/up/sysintegration/getCardMoney",
-                                 headers={"Content-Type": "application/json"},
-                                 data="{}")
+        return self.session.post(
+            url="http://zhlgd.whut.edu.cn/tp_up/up/sysintegration/getCardMoney",
+            headers={"Content-Type": "application/json"},
+            data="{}",
+        )
