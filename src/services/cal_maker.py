@@ -24,7 +24,7 @@ END_TIME_DIC = {
 
 
 def compute_start_day(term_start_day: datetime, week: int, dow: int) -> datetime:
-    return term_start_day + (week * 7 + (6 if dow == 0 else dow - 1)) * timedelta(
+    return term_start_day + ((week - 1) * 7 + (6 if dow == 0 else dow - 1)) * timedelta(
         days=1
     )
 
