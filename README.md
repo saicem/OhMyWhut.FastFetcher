@@ -1,10 +1,5 @@
 # OhMyWhut.FastFetcher
 
-![lines](https://img.shields.io/tokei/lines/github/saicem/OhMyWhut.FastFetcher)
-![size](https://img.shields.io/github/repo-size/saicem/OhMyWhut.FastFetcher)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/saicem/OhMyWhut.FastFetcher)
-![stars](https://img.shields.io/github/stars/saicem/OhMyWhut.FastFetcher?style=social)
-
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/)
 ![issues](https://img.shields.io/github/issues/saicem/OhMyWhut.FastFetcher)
 ![closed issues](https://img.shields.io/github/issues-closed/saicem/OhMyWhut.FastFetcher)
