@@ -3,9 +3,10 @@ from datetime import datetime
 
 from PIL import ImageFont
 
-TERM_START_DATE = datetime.date(
-    datetime.strptime(os.environ.get("TERM_START_DATE", "2023-02-20"), "%Y-%m-%d")
+TERM_START_DATE = datetime.strptime(
+    os.environ.get("TERM_START_DATE", "2023-02-20"), "%Y-%m-%d"
 )
+
 IMAGE_TTF = ImageFont.truetype(
     os.environ.get("COURSE_TTF", "../data/fonts/LXGWWenKaiMono-Regular.ttf"), 24
 )

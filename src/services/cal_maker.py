@@ -43,7 +43,6 @@ class IcalWriter:
             start_day + START_TIME_DIC[course.startSection] - timedelta(hours=8)
         )
         date_end = start_day + END_TIME_DIC[course.endSection] - timedelta(hours=8)
-        start_day.strftime("%Y%m%dT%H%M%SZ")
         self.ical.write("BEGIN:VEVENT\n")
         self.ical.write(f"UID:{uuid.uuid4()}\n")
         self.ical.write(f"SUMMARY:{course.name}\n")
